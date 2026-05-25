@@ -1,5 +1,6 @@
 import { useState,useEffect } from "react";
 import "./App.css";
+import Applications from "./Applications";
 
 const API_URL = import.meta.env.VITE_API_URL;
 function App() {
@@ -18,6 +19,7 @@ function App() {
       {status === 'loading' && <p>checking...</p>}
       {status === 'up' && <p style={{color:'green'}}>● API is up</p>}
       {status === 'down' && <p style={{color:'red'}}>● API is down</p>}
+      <Applications/>
     </div>
   );
 }
