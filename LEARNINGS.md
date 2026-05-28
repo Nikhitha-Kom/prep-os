@@ -1,17 +1,41 @@
 # Learnings
+- Since both api, client lie in the same repository we call this a monorepo.
+Frontend(/web) ; Backend(/api) in one Github rep with two seperate deploys.
+
+**Why did we choose Monorepo instead of two seperate repos?**
+- Because for a solo porject like this, a monorepo simplifies things - One git clone, one README, shared types etc.
+
+**Deployment pipelines (Netlify + Railway)**
+
+When we push to Github > 
+1. Netlify auto-deploys forntend
+2. Railway auto-deploys backend
+- We have Github-triggered automatic deploys on both Netlify and Railway. When we push to main, Netlify rebuilds the React app and serves it from their CDN, and Railway rebuilds the NestJS service and runs it.
+- The frontend gets the backend URL through environment variable.
+- *localhost:3000* for dev Railway URL for production. This seperation gives us the plus point to swap hosts based on the environment without changing the code.
+
+**Environment Variables**
+1. .env.local for React+Vite
+2. .env for Prisma CLI
+3. Railway's variable system for production
+4. @nestjs/config for NestJS runtime.
+NestJS at runtime doesnot read env variables directly so I had to install this package for handling env variables.
+
+@nestjs/config is the official package for managing environment variables and application configurations in the NestJS framework. It provides a robust, type-safe way to load .env files and access their values throughout your application using dependency injection.
+
 
 ## Week-1
 
 #### 1. CORS:
 - Browsers have one rule. 
 - Javascript loaded from website A cannot read responses from website B, unless website B explicitly says "I'm okay with website A reading any responses."
-- Why this rule exists ? Imagine you are logged into your bank at mybank.com in one tab. In another tab, you visit evilsite.com. Without this rule, evilsite's Javascript could secretly make request to mybank.com/transfer-money.
+- Why this rule exists ? Imagine you are logged into your bank at mybank.com in one tab. In another tab, you visit evilsite.com. Without this rule, evilsite's Javascript could secretly make request to https://mybank.com/transfer-money
   And because you are logged in, your browser would send bank cokkies along.
   The bank server, seeing the cookies, would think YOU requested the transfer. Disaster.
 
 - So browsers refuse to let JS on one origin read responses from another origin, by default.
 - In our project http://localhost:5173/ , http://localhost:3000/ are two different origins.
-- What does app.enableCors() does ? When your backend recieves a request, it adds a special header to its response: Access-Control-Allow-Origin: * . That header is the backend's way of saying "I'm fine being called by javascript from any website."
+- What does **app.enableCors()** does ? When your backend recieves a request, it adds a special header to its response: Access-Control-Allow-Origin: * . That header is the backend's way of saying "I'm fine being called by javascript from any website."
 
 #### 2. Cookies:
 - A cookie is a small piece of text the browser stores on behalf of a website. 
@@ -42,8 +66,26 @@ Now only your Netlify frontend (in someone's browser) can call your backend. evi
 
 *But this only stops browser-based attacks. Anyone with curl can still hit your backend, because CORS doesn't apply outside browsers.*
 
-2. Add authentication : There are two common approaches fro auth -- Cookies, JWT Tokens stored in local storage.
+2. Add authentication : There are two common approaches for auth -- Cookies, JWT Tokens stored in local storage.
 
 - CORS = browser-level defense (stops malicious websites)
 - Auth (JWT) = universal defense (stops anyone without credentials)
 
+
+## Week-2
+
+#### 1. Prisma:
+- Prisma is an ORM for Node.js + Typescript.
+- ORM stands for Object Relational Mapper.
+- Object part is JS/TS object.
+- Relational part is the SQL database(Postgres,MySQL).
+- Mapper is the bridge that translates between them.
+- W/O ORM we need to use raw SQL queries.
+- With ORM easier to write queries which are easier to understand.
+- Works well with NestJS.
+
+**Prisma Client Vs Prisma Service?**
+- PrismaClient is the library's class. The actual database client.
+- PrismaService is the wrapper class we wrote - extends PrismaClient, adds @Injectable() for NestJS dependency injection. Uses onModuleInit to call $connect() once at startup instead of on every request.
+- The wrapper class(PrismaService) gives one shared client across the app, Therefore single connection pool.
+- W/O this wrapper class, every service that needs database access would require `new PrismaClient()`, opening multiple connection pools.

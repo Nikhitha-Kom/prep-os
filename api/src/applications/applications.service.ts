@@ -1,11 +1,11 @@
-import { Get, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ApplicationsService {
-    constructor(private prisma : PrismaService){}
+  constructor(private prisma: PrismaService) {}
 
-    findAll(){
-        return this.prisma.application.findMany()
-    }
+  findAll() {
+    return this.prisma.application.findMany();
+  }
 }

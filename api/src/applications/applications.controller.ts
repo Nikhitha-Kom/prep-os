@@ -3,10 +3,10 @@ import { ApplicationsService } from './applications.service';
 
 @Controller('applications')
 export class ApplicationsController {
-    constructor(private readonly service : ApplicationsService){}
+  constructor(private readonly service: ApplicationsService) {}
 
-    @Get()
-    findAll(){
-        return this.service.findAll()
-    }
+  @Get()
+  findAll() {
+    return this.service.findAll();
+  }
 }
