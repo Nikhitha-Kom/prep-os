@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApplicationsService } from './applications.service';
-import { ApplicationDto } from './application-dto';
+import { ApplicationDto } from './create-application-dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Controller('applications')
@@ -16,8 +16,7 @@ export class ApplicationsController {
   }
 
   @Post()
-  async addApplication(@Body() applicationDto: ApplicationDto) {
-    console.log('Inside controller---');
+  async createApplication(@Body() applicationDto: ApplicationDto) {
     return this.service.createApplication(applicationDto);
   }
 }

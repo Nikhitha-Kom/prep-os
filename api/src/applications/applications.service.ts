@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { ApplicationDto } from './application-dto';
+import { ApplicationDto } from './create-application-dto';
 
 @Injectable()
 export class ApplicationsService {
@@ -11,11 +11,9 @@ export class ApplicationsService {
   }
 
   async createApplication(applicationDto: ApplicationDto) {
-    console.log('Inside service---');
     const application = await this.prisma.application.create({
       data: applicationDto,
     });
-    console.log('appn.---', application);
     return application;
   }
 }

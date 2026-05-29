@@ -89,3 +89,26 @@ Now only your Netlify frontend (in someone's browser) can call your backend. evi
 - PrismaService is the wrapper class we wrote - extends PrismaClient, adds @Injectable() for NestJS dependency injection. Uses onModuleInit to call $connect() once at startup instead of on every request.
 - The wrapper class(PrismaService) gives one shared client across the app, Therefore single connection pool.
 - W/O this wrapper class, every service that needs database access would require `new PrismaClient()`, opening multiple connection pools.
+
+## Week-3
+
+#### 1. Post request in api:
+- We use @Post() decorator for writing post requests.
+- In NestJS it is standard practice to use @Post() without an explicit sub-path like "/create".
+- To Create a single record in Prisma we use `prisma.application.create({pass-the-data})`. Here `application` is our table name.
+- Special decorators like @IsString() are used to validate the types in dto file.
+- To use these @IsString() decorators we need class-validator, class-transform.
+- To read these @IsString() decorators, we need ValidationPipe. In main.ts: 
+```js
+app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+```
+- With this `useGlobalPipes` every request is checked before it reaches your controller.
+- class-validator provides validation decorators such as @IsString() and @IsEmail().
+- class-transformer converts plain request objects into DTO instances and performs type transformations.
+- ValidationPipe uses both packages to validate and transform incoming requests before they reach the controller.
