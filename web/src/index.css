@@ -109,3 +109,37 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+.application-form {
+  width: 100%;
+  max-width: 600px;
+  margin: 2rem auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.application-form input,
+.application-form select,
+.application-form textarea {
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #444;
+}
+
+.application-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.application-form button {
+  padding: 12px;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  margin: 0;
+}

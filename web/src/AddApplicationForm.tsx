@@ -1,0 +1,85 @@
+import { useState } from "react";
+
+// interface CreateApplicationProps {
+//   url: string;
+// }
+
+const API_URL: string = import.meta.env.VITE_API_URL;
+function AddApplicationForm() {
+  const statusOptions: string[] = [
+    "applied",
+    "screen",
+    "tech",
+    "onsite",
+    "offer",
+    "rejected",
+  ];
+
+  const [company, setCompany] = useState("");
+  const [role, setRole] = useState("");
+  const [status, setStatus] = useState(statusOptions[0]);
+  const [jdUrl, setJdUrl] = useState("");
+  const [notes, setNotes] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.SubmitEvent) {
+    e.preventDefault();
+    const res = await fetch(`${API_URL}/applications`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        company,
+        role,
+        status,
+        jdUrl,
+        notes,
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      setError(err.message?.join("") || "Failed to add");
+      return;
+    }
+  }
+  return (
+    <div>
+      <form className="application-form" onSubmit={handleSubmit}>
+        <input
+          value={company}
+          onChange={(e) => setCompany(e.target.value)}
+          placeholder="Company"
+        />
+        <input
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          placeholder="Role"
+        />
+        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          {statusOptions.map((option) => (
+            <option value={option}>{option}</option>
+          ))}
+        </select>
+        <input
+          name="jdUrl"
+          type="url"
+          value={jdUrl}
+          placeholder="jdUrl"
+          onChange={(e) => setJdUrl(e.target.value)}
+        />
+        <textarea
+          name="notes"
+          value={notes}
+          placeholder="Notes"
+          onChange={(e) => setNotes(e.target.value)}
+        />
+        <button type="submit">
+          Add Application
+        </button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+      </form>
+    </div>
+  );
+}
+export default AddApplicationForm;
