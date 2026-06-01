@@ -113,3 +113,9 @@ app.useGlobalPipes(
 - class-validator provides validation decorators such as @IsString() and @IsEmail().
 - class-transformer converts plain request objects into DTO instances and performs type transformations.
 - ValidationPipe uses both packages to validate and transform incoming requests before they reach the controller.
+
+#### 2. Lifting state up:
+- Issue: When a new application is added, POST request happens, Row is saved in DB. Until unless we refresh the page the new list of applications won't be seen(The list of appn's are in Parent component). And using `e.preventDefault()` is correct because without it the page reloads and the state is destroyed.
+- Fix : On a new application added we need to tell the parent to re-fetch the list again so the new row appears, without any refresh being required.[Ref - onAdded in AddApplicationForm.tsx]
+- This is called **Lifting State Up**
+- React Docs Reference : If two components need to communicate, find the closest common ancestor

@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
 import type { Application } from "./types";
 import AddApplicationForm from "./AddApplicationForm";
+import { API_URL } from "./constants";
 import "./App.css";
 
-const API_URL: string = import.meta.env.VITE_API_URL;
 function Applications() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
 
+  let fetchApplications = async () => {
+    let res = await fetch(`${API_URL}/applications`);
+    let data = await res.json();
+    setApplications(data);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    fetch(`${API_URL}/applications`)
-      .then((r) => r.json())
-      .then((data) => {
-        setApplications(data);
-        setLoading(false);
-      });
+    fetchApplications();
   }, []);
 
   if (loading) return <p>loading...</p>;
@@ -26,7 +28,7 @@ function Applications() {
           <li>{a.company}</li>
         ))}
       </ul>
-      <AddApplicationForm />
+      <AddApplicationForm onAdded={fetchApplications} />
     </div>
   );
 }

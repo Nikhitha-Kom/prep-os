@@ -1,11 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { API_URL } from "./constants";
 
-// interface CreateApplicationProps {
-//   url: string;
-// }
+interface CreateApplicationProps {
+  onAdded: () => void;
+}
 
-const API_URL: string = import.meta.env.VITE_API_URL;
-function AddApplicationForm() {
+function AddApplicationForm({ onAdded }: CreateApplicationProps) {
   const statusOptions: string[] = [
     "applied",
     "screen",
@@ -22,7 +22,7 @@ function AddApplicationForm() {
   const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(e: React.SubmitEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const res = await fetch(`${API_URL}/applications`, {
       method: "POST",
@@ -33,15 +33,23 @@ function AddApplicationForm() {
         company,
         role,
         status,
-        jdUrl,
-        notes,
+        ...(jdUrl ? { jdUrl } : {}), // Works as: if(jdUrl) body.jdUrl = jdUrl
+        ...(notes ? { notes } : {}),
       }),
     });
     if (!res.ok) {
       const err = await res.json();
-      setError(err.message?.join("") || "Failed to add");
+      setError(err.message?.join(", ") || "Failed to add");
       return;
     }
+    //If Success - clear form fields
+    setCompany("");
+    setRole("");
+    setStatus(statusOptions[0]);
+    setJdUrl("");
+    setNotes("");
+
+    onAdded();
   }
   return (
     <div>
@@ -74,9 +82,7 @@ function AddApplicationForm() {
           placeholder="Notes"
           onChange={(e) => setNotes(e.target.value)}
         />
-        <button type="submit">
-          Add Application
-        </button>
+        <button type="submit">Add Application</button>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
     </div>
