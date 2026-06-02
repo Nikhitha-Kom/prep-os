@@ -12,7 +12,7 @@ export class ApplicationDto {
   status!: string;
 
   @IsOptional()
-  @IsString()
+  @IsIn(['LinkedIn', 'Naukri', 'Cutshort', 'Foundit', 'Referral'])
   source?: string;
 
   @IsOptional()
