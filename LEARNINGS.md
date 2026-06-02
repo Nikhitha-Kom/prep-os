@@ -119,3 +119,11 @@ app.useGlobalPipes(
 - Fix : On a new application added we need to tell the parent to re-fetch the list again so the new row appears, without any refresh being required.[Ref - onAdded in AddApplicationForm.tsx]
 - This is called **Lifting State Up**
 - React Docs Reference : If two components need to communicate, find the closest common ancestor
+
+#### 3. Updating a table in prisma:
+- Task: To add a new column 'status' in application table
+- Updated the `model Application` in `schema.prisma` file with source column and run the below command
+``` js 
+npx prisma migrate dev --name {migration_file_name}
+```
+- Changes will be updated in the application table.

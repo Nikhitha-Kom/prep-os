@@ -3,6 +3,7 @@ export type Application = {
     company: string;
     role: string;
     status: string;
+    source: string;
     jdUrl :string | null;
     notes :string | null;
     createdAt: string;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import type { Application } from "./types";
 import AddApplicationForm from "./AddApplicationForm";
+import ApplicationList from "./ApplicationList";
+import type { Application } from "./types";
 import { API_URL } from "./constants";
 import "./App.css";
 
@@ -8,9 +9,9 @@ function Applications() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
 
-  let fetchApplications = async () => {
-    let res = await fetch(`${API_URL}/applications`);
-    let data = await res.json();
+  const fetchApplications = async () => {
+    const res = await fetch(`${API_URL}/applications`);
+    const data = await res.json();
     setApplications(data);
     setLoading(false);
   };
@@ -23,11 +24,7 @@ function Applications() {
   if (applications.length === 0) return <p>No applications yet.</p>;
   return (
     <div>
-      <ul>
-        {applications.map((a) => (
-          <li>{a.company}</li>
-        ))}
-      </ul>
+      <ApplicationList applications={applications}/>
       <AddApplicationForm onAdded={fetchApplications} />
     </div>
   );

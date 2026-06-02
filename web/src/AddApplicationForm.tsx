@@ -15,14 +15,18 @@ function AddApplicationForm({ onAdded }: CreateApplicationProps) {
     "rejected",
   ];
 
+  const sourceOptions: string[] = ["LinkedIn", "Naukri", "Cutshort", "Foundit", "Referral"]
+
   const [company, setCompany] = useState("");
   const [role, setRole] = useState("");
   const [status, setStatus] = useState(statusOptions[0]);
+  const [source, setSource] = useState(sourceOptions[0]);
   const [jdUrl, setJdUrl] = useState("");
   const [notes, setNotes] = useState("");
+
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const res = await fetch(`${API_URL}/applications`, {
       method: "POST",
@@ -33,7 +37,8 @@ function AddApplicationForm({ onAdded }: CreateApplicationProps) {
         company,
         role,
         status,
-        ...(jdUrl ? { jdUrl } : {}), // Works as: if(jdUrl) body.jdUrl = jdUrl
+        ...(source ? { source } : {}), // Works as: if(source) body.source = source
+        ...(jdUrl ? { jdUrl } : {}), 
         ...(notes ? { notes } : {}),
       }),
     });
@@ -46,6 +51,7 @@ function AddApplicationForm({ onAdded }: CreateApplicationProps) {
     setCompany("");
     setRole("");
     setStatus(statusOptions[0]);
+    setSource(sourceOptions[0])
     setJdUrl("");
     setNotes("");
 
@@ -66,6 +72,11 @@ function AddApplicationForm({ onAdded }: CreateApplicationProps) {
         />
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
           {statusOptions.map((option) => (
+            <option value={option}>{option}</option>
+          ))}
+        </select>
+        <select value={source} onChange={(e) => setSource(e.target.value)}>
+          {sourceOptions.map((option) => (
             <option value={option}>{option}</option>
           ))}
         </select>
