@@ -127,3 +127,4 @@ app.useGlobalPipes(
 npx prisma migrate dev --name {migration_file_name}
 ```
 - Changes will be updated in the application table.
+- Instead of running the above command every time, created one script "migrate" in api's package.json, Where the name of the migration will be prompted by the Terminal itself.

@@ -1,10 +1,12 @@
-import { IsString, IsOptional, IsIn } from 'class-validator';
+import { IsString, IsOptional, IsIn, IsNotEmpty } from 'class-validator';
 
 export class ApplicationDto {
   @IsString()
+  @IsNotEmpty()
   company!: string;
 
   @IsString()
+  @IsNotEmpty()
   role!: string;
 
   @IsOptional()
