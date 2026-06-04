@@ -14,22 +14,23 @@ function ApplicationList({ applications }: ApplicationListProps) {
   }, [applications]);
   return (
     <div>
-      <table>
+      <h3>My Applications</h3>
+      <table style={{width: '100%', borderCollapse:'collapse', border:'1px solid white'}}>
         <thead>
-          <tr>
-            <th>Company</th>
-            <th>Role</th>
-            <th>Source</th>
-            <th>Status</th>
+          <tr style={{border:'1px solid white'}}>
+            <th style={{padding:'8px', border:'1px solid white'}}>Company</th>
+            <th style={{padding:'8px', border:'1px solid white'}}>Role</th>
+            <th style={{padding:'8px', border:'1px solid white'}}>Source</th>
+            <th style={{padding:'8px', border:'1px solid white'}}>Status</th>
           </tr>
         </thead>
         <tbody>
           {sortedApplications.map((application) => (
-            <tr>
-              <td>{application.company}</td>
-              <td>{application.role}</td>
-              <td>{application.source}</td>
-              <td>
+            <tr style={{border:'1px solid white'}}>
+              <td style={{textAlign:'left',padding:'8px', border:'1px solid white'}}>{application.company}</td>
+              <td style={{textAlign:'left',padding:'8px', border:'1px solid white'}}>{application.role}</td>
+              <td style={{textAlign:'left',padding:'8px', border:'1px solid white'}}>{application.source}</td>
+              <td style={{textAlign:'left',padding:'8px', border:'1px solid white'}}>
                 <StatusPill status={application.status} />{" "}
               </td>
             </tr>

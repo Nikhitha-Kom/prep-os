@@ -59,7 +59,8 @@ function AddApplicationForm({ onAdded }: CreateApplicationProps) {
   }
   return (
     <div>
-      <form className="application-form" onSubmit={handleSubmit}>
+      <h3>Add new</h3>
+      <form style={{maxWidth : '500px', margin:'0 auto'}} className="application-form" onSubmit={handleSubmit}>
         <input
           value={company}
           onChange={(e) => setCompany(e.target.value)}
@@ -81,7 +82,7 @@ function AddApplicationForm({ onAdded }: CreateApplicationProps) {
           ))}
         </select>
         <input
-          name="jdUrl"
+          name="job description URL"
           type="url"
           value={jdUrl}
           placeholder="jdUrl"

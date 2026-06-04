@@ -15,7 +15,6 @@ function App() {
 
   return (
     <div style={{ fontFamily: 'sans-serif', padding: 40 }}>
-      <h1>Prep OS</h1>
       {status === 'loading' && <p>checking...</p>}
       {status === 'up' && <p style={{color:'green'}}>● API is up</p>}
       {status === 'down' && <p style={{color:'red'}}>● API is down</p>}
