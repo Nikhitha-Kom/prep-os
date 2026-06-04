@@ -21,10 +21,13 @@ function Applications() {
   }, []);
 
   if (loading) return <p>loading...</p>;
-  if (applications.length === 0) return <p>No applications yet.</p>;
   return (
     <div>
-      <ApplicationList applications={applications}/>
+      {applications.length === 0 ? (
+        <p>No applications yet.</p>
+      ) : (
+        <ApplicationList applications={applications} />
+      )}
       <AddApplicationForm onAdded={fetchApplications} />
     </div>
   );

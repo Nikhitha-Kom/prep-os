@@ -128,3 +128,32 @@ npx prisma migrate dev --name {migration_file_name}
 ```
 - Changes will be updated in the application table.
 - Instead of running the above command every time, created one script "migrate" in api's package.json, Where the name of the migration will be prompted by the Terminal itself.
+
+#### 4. CORS update:
+```js
+app.enableCors({
+  origin: ["http://localhost:5173"],
+  methods: ['GET','POST','PUT','PATCH','DELETE'],
+  credentials: true,
+});
+```
+- This is a static allow list.
+- If incoming request is from origin other than 'http://localhost:5173', NestJS will not allow the request.
+```js
+const allowedOrigins = [
+  'http://localhost:5173',
+];
+app.enableCors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+});
+```
+- Here with the callback method we control the logic.
+- Some requests don't send an Origin header for example Postman, curl, server-to-server requests.
+- Then origin will be `undefined`, so !origin will become true.
+- Without this condition in if block the curl commands get blocked.
