@@ -14,7 +14,9 @@ async function bootstrap() {
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
-      } else callback(new Error('Not allowed by CORS'));
+      } else {
+        console.log('Request form origin:',origin)
+        callback(new Error('Not allowed by CORS'));}
     },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
