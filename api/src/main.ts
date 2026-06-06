@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -15,8 +17,9 @@ async function bootstrap() {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.log('Request from origin:',origin)
-        callback(new Error('Not allowed by CORS'));}
+        console.log('Request from origin:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
     },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
