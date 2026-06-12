@@ -6,9 +6,10 @@ import {
   statusOptions,
   type Application,
 } from "./types";
+import { toast } from "react-toastify";
 
 interface AddApplicationProps {
-  onAdded: () => void;
+  onAdded: () => Promise<void>;
   onClose: () => void;
   action: FormActionType;
   application?: Application;
@@ -85,13 +86,29 @@ function ApplicationForm({
     setJdUrl("");
     setNotes("");
 
-    onAdded();
+    toast.success(
+      addApplictaion
+        ? "Application added successfully"
+        : "Application updated successfully"
+    );    
+
+    await onAdded();
     onClose();
   }
 
   const handleClose = () => {
     onClose();
   };
+
+  const disableAddOrUpdateButton = addApplictaion
+    ? !company.trim() || !role.trim()
+    : !(
+        application?.source !== source ||
+        application?.status !== status ||
+        application?.jdUrl !== jdUrl ||
+        application?.notes !== notes
+      );
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -106,7 +123,7 @@ function ApplicationForm({
               : `${application?.company}'s update application`}
           </h3>
           {
-            <button className="close-button" onClick={handleClose}>
+            <button className="close-button" type="button" onClick={handleClose}>
               X
             </button>
           }
@@ -147,7 +164,7 @@ function ApplicationForm({
             placeholder="Notes"
             onChange={(e) => setNotes(e.target.value)}
           />
-          <button type="submit">
+          <button disabled={disableAddOrUpdateButton} type="submit">
             {addApplictaion ? "Add" : "Update"} Application
           </button>
           {error && <p style={{ color: "red" }}>{error}</p>}

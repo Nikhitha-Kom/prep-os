@@ -157,3 +157,41 @@ app.enableCors({
 - Some requests don't send an Origin header for example Postman, curl, server-to-server requests.
 - Then origin will be `undefined`, so !origin will become true.
 - Without this condition in if block the curl commands get blocked.
+
+## Week-4
+
+#### 1. Callback props (Child → Parent Communication):
+- Parent components can pass functions as props to child components.
+Parent:
+```js
+<ApplicationForm
+  onClose={() => setShowModal(false)}
+/>
+```
+
+Child:
+```js 
+onClose?.();
+```
+Calling onClose() inside the child executes the function defined by the parent.
+This pattern allows child components to notify parent components about user actions without directly modifying parent state.
+
+#### 2. PATCH Requests and Empty Fields:
+- During updates, sending: `...(notes ? { notes } : {})` as we did for POST request it removes the notes property entirely when notes is an empty string.
+- *But this is how we send the body for POST api, so that we can completely omit the fields that are left without any value*
+- But this way in updating the values prevents users from clearing existing notes.Therefore we send the fields as below:
+
+``` js
+body: JSON.stringify({
+  status,
+  source,
+  jdUrl,
+  notes,
+});
+```
+- Sending the field explicitly allows the backend to update the value to an empty string when needed.
+
+#### 3. Toast Notification from react-toastify:
+- You must mount the `<ToastContainer/>` component at the global level of your application.
+- ToastContainer should be rendered only once at a higher level for example in our code it is in `Applications.tsx`
+- toast.success() or toast.info() can be called from anywhere in the application.

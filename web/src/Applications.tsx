@@ -5,6 +5,7 @@ import type { Application } from "./types";
 import { FormActionType } from "./types";
 import { API_URL } from "./constants";
 import "./App.css";
+import { ToastContainer } from "react-toastify";
 
 function Applications() {
   const [applications, setApplications] = useState<Application[]>([]);
@@ -25,6 +26,12 @@ function Applications() {
   if (loading) return <p>loading...</p>;
   return (
     <div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        pauseOnHover
+        theme="dark"
+      />
       {applications.length === 0 ? (
         <p>No applications yet.</p>
       ) : (

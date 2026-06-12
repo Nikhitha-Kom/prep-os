@@ -5,7 +5,7 @@ import ApplicationForm from "./ApplicationForm";
 
 interface ApplicationListProps {
   applications: Application[];
-  onAdded: () => void;
+  onAdded: () => Promise<void>;
   onClose?: () => void;
 }
 
