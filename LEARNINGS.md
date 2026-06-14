@@ -195,3 +195,21 @@ body: JSON.stringify({
 - You must mount the `<ToastContainer/>` component at the global level of your application.
 - ToastContainer should be rendered only once at a higher level for example in our code it is in `Applications.tsx`
 - toast.success() or toast.info() can be called from anywhere in the application.
+
+#### 4. Event Bubbling:#### 6. Event Bubbling:
+
+- Browser events travel upward through parent elements. This is called **Event Bubbling**.
+```js
+<div onClick={() => console.log("Parent")}>
+  <button onClick={() => console.log("Child")}>
+    Click
+  </button>
+</div>
+```
+- Clicking the button logs: Child, Parent . Because the click bubbles from the button to the parent.
+- To stop this behavior:
+
+```js
+const handleClick = (e) => {e.stopPropagation()};
+```
+- In our project, clicking the Delete button inside a table row was also opening the Update modal because the button's click event bubbled up to the row's `onClick`. Using `e.stopPropagation()` prevented the row click from firing.

@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
+import ApplicationForm from "./ApplicationForm";
 import StatusPill from "./StatusPill";
 import { FormActionType, type Application } from "./types";
-import ApplicationForm from "./ApplicationForm";
+import { FcFullTrash } from "react-icons/fc";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import { toast } from "react-toastify";
 
 interface ApplicationListProps {
   applications: Application[];
@@ -11,7 +14,10 @@ interface ApplicationListProps {
 
 function ApplicationList({ applications, onAdded }: ApplicationListProps) {
   const [application, setApplication] = useState<Application>();
-  const [showModal, setShowModal] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteApplication, setDeleteApplication] =
+    useState<Application | null>(null);
 
   const sortedApplications = useMemo(() => {
     return [...applications].sort((a, b) => {
@@ -21,7 +27,27 @@ function ApplicationList({ applications, onAdded }: ApplicationListProps) {
 
   const handleRowClick = (application: Application) => {
     setApplication(application);
-    setShowModal(true);
+    setShowForm(true);
+  };
+
+  const handleDelete = async (
+    e: React.MouseEvent,
+    application: Application
+  ) => {
+    e.stopPropagation();
+    setDeleteApplication(application);
+    setShowDeleteConfirm(true);
+  };
+
+  const onDelete = () => {
+    setShowDeleteConfirm(false);
+    onAdded();
+    toast.success("Application deleted successfully");
+  };
+
+  const onCancel = () => {
+    setDeleteApplication(null);
+    setShowDeleteConfirm(false);
   };
 
   return (
@@ -31,11 +57,11 @@ function ApplicationList({ applications, onAdded }: ApplicationListProps) {
         style={{
           width: "100%",
           borderCollapse: "collapse",
-          border: "1px solid white",
         }}
       >
         <thead>
           <tr>
+            <th></th>
             <th style={{ padding: "8px", border: "1px solid white" }}>
               Company
             </th>
@@ -50,7 +76,18 @@ function ApplicationList({ applications, onAdded }: ApplicationListProps) {
         </thead>
         <tbody>
           {sortedApplications.map((application) => (
-            <tr onClick={() => handleRowClick(application)}>
+            <tr
+              key={application.id}
+              onClick={() => handleRowClick(application)}
+            >
+              <td>
+                <button
+                  type="button"
+                  onClick={(e) => handleDelete(e, application)}
+                >
+                  <FcFullTrash />
+                </button>
+              </td>
               <td
                 style={{
                   textAlign: "left",
@@ -91,12 +128,19 @@ function ApplicationList({ applications, onAdded }: ApplicationListProps) {
           ))}
         </tbody>
       </table>
-      {showModal && (
+      {showForm && (
         <ApplicationForm
           onAdded={onAdded}
-          onClose={() => setShowModal(false)}
+          onClose={() => setShowForm(false)}
           action={FormActionType.Update}
           application={application}
+        />
+      )}
+      {showDeleteConfirm && deleteApplication && (
+        <DeleteConfirmationModal
+          application={deleteApplication}
+          onConfirm={onDelete}
+          onCancel={onCancel}
         />
       )}
     </div>
