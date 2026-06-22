@@ -196,7 +196,7 @@ body: JSON.stringify({
 - ToastContainer should be rendered only once at a higher level for example in our code it is in `Applications.tsx`
 - toast.success() or toast.info() can be called from anywhere in the application.
 
-#### 4. Event Bubbling:#### 6. Event Bubbling:
+#### 4. Event Bubbling:
 
 - Browser events travel upward through parent elements. This is called **Event Bubbling**.
 ```js

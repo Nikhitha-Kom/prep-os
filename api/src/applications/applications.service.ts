@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import {
-  CreateApplicationDto,
-  UpdateApplicationDto,
-} from './create-application-dto';
+import { CreateApplicationDto } from './create-application-dto';
+import { UpdateApplicationDto } from './update-application-dto';
 
 @Injectable()
 export class ApplicationsService {
@@ -21,21 +19,33 @@ export class ApplicationsService {
   }
 
   async updateApplication(id: string, applicationDto: UpdateApplicationDto) {
-    const updatedApplication = await this.prisma.application.update({
-      where: {
-        id: id,
-      },
-      data: applicationDto,
-    });
-    return updatedApplication;
+    try {
+      return await this.prisma.application.update({
+        where: {
+          id: id,
+        },
+        data: applicationDto,
+      });
+    } catch (e: any) {
+      if (e.code === 'P2025') {
+        throw new NotFoundException(`Appllication with ${id} not found`);
+      }
+      throw e;
+    }
   }
 
   async deleteApplication(id: string) {
-    const deletedApplication = await this.prisma.application.delete({
-      where: {
-        id: id,
-      },
-    });
-    return deletedApplication;
+    try {
+      return await this.prisma.application.delete({
+        where: {
+          id: id,
+        },
+      });
+    } catch (e: any) {
+      if (e.code === 'P2025') {
+        throw new NotFoundException(`Appllication with ${id} not found`);
+      }
+      throw e;
+    }
   }
 }

@@ -25,21 +25,3 @@ export class CreateApplicationDto {
   @IsString()
   notes?: string;
 }
-
-export class UpdateApplicationDto {
-  @IsOptional()
-  @IsIn(['applied', 'screen', 'tech', 'onsite', 'offer', 'rejected'])
-  status!: string;
-
-  @IsOptional()
-  @IsIn(['LinkedIn', 'Naukri', 'Cutshort', 'Foundit', 'Referral'])
-  source?: string;
-
-  @IsOptional()
-  @IsString()
-  jdUrl?: string;
-
-  @IsOptional()
-  @IsString()
-  notes?: string;
-}

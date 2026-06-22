@@ -21,7 +21,7 @@ function ApplicationForm({
   action,
   application,
 }: AddApplicationProps) {
-  const addApplictaion = action === FormActionType.Add;
+  const addApplication = action === FormActionType.Add;
 
   const [company, setCompany] = useState("");
   const [role, setRole] = useState("");
@@ -36,7 +36,7 @@ function ApplicationForm({
     if (!application) return;
 
     setStatus(application.status);
-    setSource(application.source);
+    setSource(application.source ?? sourceOptions[0]);
     setJdUrl(application.jdUrl ?? "");
     setNotes(application.notes ?? "");
   }, [application]);
@@ -44,7 +44,7 @@ function ApplicationForm({
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     let res;
-    if (addApplictaion) {
+    if (addApplication) {
       res = await fetch(`${API_URL}/applications`, {
         method: "POST",
         headers: {
@@ -56,7 +56,7 @@ function ApplicationForm({
           status,
           ...(source ? { source } : {}),
           ...(jdUrl ? { jdUrl } : {}),
-          ...(notes ? { notes } : null),
+          ...(notes ? { notes } : {}),
         }),
       });
     } else {
@@ -87,10 +87,10 @@ function ApplicationForm({
     setNotes("");
 
     toast.success(
-      addApplictaion
+      addApplication
         ? "Application added successfully"
         : "Application updated successfully"
-    );    
+    );
 
     await onAdded();
     onClose();
@@ -100,14 +100,15 @@ function ApplicationForm({
     onClose();
   };
 
-  const disableAddOrUpdateButton = addApplictaion
+  const hasChanges =
+    application?.source !== source ||
+    application?.status !== status ||
+    application?.jdUrl !== jdUrl ||
+    application?.notes !== notes;
+
+  const disableAddOrUpdateButton = addApplication
     ? !company.trim() || !role.trim()
-    : !(
-        application?.source !== source ||
-        application?.status !== status ||
-        application?.jdUrl !== jdUrl ||
-        application?.notes !== notes
-      );
+    : !hasChanges;
 
   return (
     <div className="modal-overlay">
@@ -118,23 +119,27 @@ function ApplicationForm({
           onSubmit={handleSubmit}
         >
           <h3>
-            {addApplictaion
+            {addApplication
               ? "Add application"
               : `${application?.company}'s update application`}
           </h3>
           {
-            <button className="close-button" type="button" onClick={handleClose}>
+            <button
+              className="close-button"
+              type="button"
+              onClick={handleClose}
+            >
               X
             </button>
           }
-          {addApplictaion && (
+          {addApplication && (
             <input
               value={company}
               onChange={(e) => setCompany(e.target.value)}
               placeholder="Company"
             />
           )}
-          {addApplictaion && (
+          {addApplication && (
             <input
               value={role}
               onChange={(e) => setRole(e.target.value)}
@@ -165,7 +170,7 @@ function ApplicationForm({
             onChange={(e) => setNotes(e.target.value)}
           />
           <button disabled={disableAddOrUpdateButton} type="submit">
-            {addApplictaion ? "Add" : "Update"} Application
+            {addApplication ? "Add" : "Update"} Application
           </button>
           {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
